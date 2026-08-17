@@ -1,0 +1,1 @@
+"""SkillCubes FastAPI application package."""
