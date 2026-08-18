@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/haptics.dart';
 import 'arcade_metrics.dart';
@@ -92,7 +93,7 @@ class _SpatialGridGameState extends State<SpatialGridGame> {
 
     if (!_pattern.contains(index)) {
       _errors++;
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
       _resolveRound(success: false);
       return;
     }
@@ -105,7 +106,7 @@ class _SpatialGridGameState extends State<SpatialGridGame> {
         final ms = DateTime.now().difference(_inputStarted!).inMilliseconds;
         _hits++;
         _rts.add(ms);
-        AppHaptics.success();
+        AnswerFeedback.show(context, isCorrect: true);
         _resolveRound(success: true);
       }
     }

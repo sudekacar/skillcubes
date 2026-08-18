@@ -3,6 +3,7 @@ import '../../../core/widgets/snappy_sheet.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
@@ -103,15 +104,12 @@ class _ProblemsScreenState extends State<ProblemsScreen> {
   Future<void> _pick(int i) async {
     if (_selected != null) return;
     final p = kProblems[_index];
+    final isCorrect = i == p.correctIndex;
     setState(() {
       _selected = i;
-      if (i == p.correctIndex) {
-        _correct++;
-        AppHaptics.success();
-      } else {
-        AppHaptics.error();
-      }
+      if (isCorrect) _correct++;
     });
+    AnswerFeedback.show(context, isCorrect: isCorrect);
   }
 
   Future<void> _next() async {

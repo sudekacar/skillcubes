@@ -5,10 +5,10 @@ import '../../../core/widgets/snappy_sheet.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/haptics.dart';
 import '../presentation/game_widgets.dart';
 
 class _ChartQ {
@@ -84,16 +84,13 @@ class _ChartsGameScreenState extends State<ChartsGameScreen> {
 
   Future<void> _pick(int i) async {
     if (_revealed) return;
+    final isCorrect = i == _questions[_index].correctIndex;
     setState(() {
       _selected = i;
       _revealed = true;
-      if (i == _questions[_index].correctIndex) {
-        _correct++;
-        AppHaptics.success();
-      } else {
-        AppHaptics.error();
-      }
+      if (isCorrect) _correct++;
     });
+    AnswerFeedback.show(context, isCorrect: isCorrect);
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     if (_index + 1 >= _total) {

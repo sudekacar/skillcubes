@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
@@ -113,12 +114,11 @@ class _MarathonScreenState extends State<MarathonScreen> {
   Future<void> _pick(int i) async {
     if (_finished) return;
     final item = _items[_index];
-    if (i == item.correctIndex) {
+    final isCorrect = i == item.correctIndex;
+    if (isCorrect) {
       _correct++;
-      AppHaptics.success();
-    } else {
-      AppHaptics.error();
     }
+    AnswerFeedback.show(context, isCorrect: isCorrect);
     if (_index + 1 >= _items.length) {
       await _end();
     } else {

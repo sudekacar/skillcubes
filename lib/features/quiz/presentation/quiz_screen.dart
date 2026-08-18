@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/services/auth_provider.dart';
@@ -419,12 +420,12 @@ class _QuizScreenState extends State<QuizScreen> {
                                     enabled: !quiz.answered && !quiz.finished,
                                     onTap: () {
                                       AppHaptics.selection();
+                                      final isCorrect = i == q.correctIndex;
                                       quiz.selectOption(i);
-                                      if (i == q.correctIndex) {
-                                        AppHaptics.success();
-                                      } else {
-                                        AppHaptics.error();
-                                      }
+                                      AnswerFeedback.show(
+                                        context,
+                                        isCorrect: isCorrect,
+                                      );
                                       setState(() {});
                                     },
                                   );

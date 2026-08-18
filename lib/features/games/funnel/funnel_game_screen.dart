@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/haptics.dart';
 import '../presentation/game_widgets.dart';
 
 class FunnelPuzzle {
@@ -72,16 +72,13 @@ class _FunnelGameScreenState extends State<FunnelGameScreen> {
 
   Future<void> _pick(int i) async {
     if (_revealed) return;
+    final isCorrect = i == _puzzles[_index].correctIndex;
     setState(() {
       _selected = i;
       _revealed = true;
-      if (i == _puzzles[_index].correctIndex) {
-        _correct++;
-        AppHaptics.success();
-      } else {
-        AppHaptics.error();
-      }
+      if (isCorrect) _correct++;
     });
+    AnswerFeedback.show(context, isCorrect: isCorrect);
     await Future.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
     if (_index + 1 >= _puzzles.length) {

@@ -128,6 +128,8 @@
   "password_mismatch": "Şifreler eşleşmiyor",
   "fill_all_fields": "Lütfen tüm alanları doldur",
   "register_success": "Hesabınız başarıyla oluşturuldu! Lütfen giriş yapın.",
+  "feedback_correct": "Mükemmelsin canım!",
+  "feedback_wrong": "Biraz salaklık var galiba...",
   "radar_title": "Bilişsel Radar",
   "radar_subtitle": "6 eksende performansın (Speed, Memory, Math, Logic, Focus, Pattern)",
   "radar_empty": "Radar için giriş yapıp birkaç test tamamla.",

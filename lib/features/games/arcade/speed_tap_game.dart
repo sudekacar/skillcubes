@@ -5,8 +5,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/haptics.dart';
 import 'arcade_metrics.dart';
 
 /// Glowing targets appear one-by-one on a grid; tap before they expire.
@@ -74,12 +74,12 @@ class _SpeedTapGameState extends State<SpeedTapGame>
       _shownAt = DateTime.now();
     });
     _expireTimer = Timer(const Duration(milliseconds: _windowMs), () {
-      if (_finished || _activeIndex == null) return;
+      if (_finished || _activeIndex == null || !mounted) return;
       setState(() {
         _misses++;
         _activeIndex = null;
       });
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
       Future.delayed(const Duration(milliseconds: 220), _spawn);
     });
   }
@@ -88,7 +88,7 @@ class _SpeedTapGameState extends State<SpeedTapGame>
     if (_finished || _activeIndex == null) return;
     if (index != _activeIndex) {
       setState(() => _errors++);
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
       return;
     }
     final ms = DateTime.now().difference(_shownAt!).inMilliseconds;
@@ -98,7 +98,7 @@ class _SpeedTapGameState extends State<SpeedTapGame>
       _rts.add(ms);
       _activeIndex = null;
     });
-    AppHaptics.success();
+    AnswerFeedback.show(context, isCorrect: true);
     Future.delayed(const Duration(milliseconds: 180), _spawn);
   }
 

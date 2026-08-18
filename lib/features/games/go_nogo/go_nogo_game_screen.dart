@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
@@ -93,7 +94,7 @@ class _GoNoGoGameScreenState extends State<GoNoGoGameScreen> {
     });
 
     _roundTimer = Timer(Duration(milliseconds: 900 + _rng.nextInt(500)), () {
-      if (!_waitingTap || _finished) return;
+      if (!_waitingTap || _finished || !mounted) return;
       // missed a Go
       if (!_isNoGo) {
         setState(() {
@@ -101,7 +102,7 @@ class _GoNoGoGameScreenState extends State<GoNoGoGameScreen> {
           _waitingTap = false;
           _label = null;
         });
-        AppHaptics.error();
+        AnswerFeedback.show(context, isCorrect: false);
       } else {
         setState(() {
           _waitingTap = false;
@@ -120,11 +121,11 @@ class _GoNoGoGameScreenState extends State<GoNoGoGameScreen> {
 
     if (_isNoGo) {
       _falseAlarms++;
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
     } else {
       _hits++;
       _reactionTimes.add(ms);
-      AppHaptics.success();
+      AnswerFeedback.show(context, isCorrect: true);
     }
     setState(() => _label = null);
     Future.delayed(const Duration(milliseconds: 280), _nextStimulus);

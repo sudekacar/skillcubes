@@ -5,10 +5,10 @@ import '../../../core/widgets/snappy_sheet.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/haptics.dart';
 import '../presentation/game_widgets.dart';
 
 class _RatioQ {
@@ -68,12 +68,8 @@ class _RatioGameScreenState extends State<RatioGameScreen> {
   Future<void> _answer(bool choseLeft) async {
     final q = _questions[_index];
     final ok = choseLeft == q.leftWins;
-    if (ok) {
-      _correct++;
-      AppHaptics.success();
-    } else {
-      AppHaptics.error();
-    }
+    if (ok) _correct++;
+    AnswerFeedback.show(context, isCorrect: ok);
     if (_index + 1 >= _total) {
       final score = (_correct / _total) * 100;
       await context.read<GameStatsStore>().recordGameResult(

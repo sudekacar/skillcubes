@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/haptics.dart';
 import 'arcade_metrics.dart';
@@ -178,21 +179,21 @@ class _SwipeFocusGameState extends State<SwipeFocusGame>
     if (!best.isTarget) {
       best.resolved = true;
       _errors++;
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
       return;
     }
 
     if (best.requiredDir != dir) {
       best.resolved = true;
       _errors++;
-      AppHaptics.error();
+      AnswerFeedback.show(context, isCorrect: false);
       return;
     }
 
     best.resolved = true;
     _hits++;
     _rts.add(DateTime.now().difference(best.spawnedAt).inMilliseconds);
-    AppHaptics.success();
+    AnswerFeedback.show(context, isCorrect: true);
   }
 
   void _end() {

@@ -7,10 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/feedback/answer_feedback.dart';
 import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/haptics.dart';
 import '../presentation/game_widgets.dart';
 
 class _MathQ {
@@ -96,16 +96,13 @@ class _QuickMathGameScreenState extends State<QuickMathGameScreen>
 
   Future<void> _pick(int value) async {
     if (_finished) return;
+    final isCorrect = value == _question.answer;
     setState(() {
       _answered++;
-      if (value == _question.answer) {
-        _score++;
-        AppHaptics.success();
-      } else {
-        AppHaptics.error();
-      }
+      if (isCorrect) _score++;
       _question = _generate();
     });
+    AnswerFeedback.show(context, isCorrect: isCorrect);
   }
 
   Future<void> _end() async {

@@ -128,6 +128,8 @@
   "password_mismatch": "Passwords do not match",
   "fill_all_fields": "Please fill all fields",
   "register_success": "Your account was created successfully! Please sign in.",
+  "feedback_correct": "You're a genius, darling!",
+  "feedback_wrong": "A bit of a brain fart, I guess...",
   "radar_title": "Cognitive Radar",
   "radar_subtitle": "Your 6-axis profile (Speed, Memory, Math, Logic, Focus, Pattern)",
   "radar_empty": "Sign in and complete a few tests to fill the radar.",
