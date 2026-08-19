@@ -40,7 +40,7 @@ class AppTheme {
     required Color textMuted,
   }) {
     final base = ThemeData(brightness: brightness, useMaterial3: true);
-    final textTheme = GoogleFonts.dmSansTextTheme(base.textTheme).apply(
+    final textTheme = GoogleFonts.poppinsTextTheme(base.textTheme).apply(
       bodyColor: textPrimary,
       displayColor: textPrimary,
     );
@@ -68,7 +68,7 @@ class AppTheme {
         backgroundColor: background,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: GoogleFonts.dmSans(
+        titleTextStyle: GoogleFonts.poppins(
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w700,
@@ -93,7 +93,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: GoogleFonts.dmSans(
+          textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
@@ -107,7 +107,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: GoogleFonts.dmSans(
+          textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -116,7 +116,11 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
-        hintStyle: TextStyle(color: textMuted),
+        hintStyle: TextStyle(
+          color: textMuted,
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: border),
@@ -152,7 +156,7 @@ class AppTheme {
         backgroundColor: brightness == Brightness.dark
             ? DarkPalette.surfaceLight
             : LightPalette.surfaceLight,
-        contentTextStyle: GoogleFonts.dmSans(color: textPrimary),
+        contentTextStyle: GoogleFonts.poppins(color: textPrimary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),

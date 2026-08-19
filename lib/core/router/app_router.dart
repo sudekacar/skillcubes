@@ -28,6 +28,25 @@ import '../widgets/snappy_sheet.dart';
 final _rootKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();
 
+/// Soft fade when leaving the splash screen.
+CustomTransitionPage<void> _fadePage({
+  required LocalKey key,
+  required Widget child,
+}) {
+  return CustomTransitionPage<void>(
+    key: key,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 480),
+    reverseTransitionDuration: const Duration(milliseconds: 360),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+        child: child,
+      );
+    },
+  );
+}
+
 /// Instant / snappy page transitions for nested dashboard routes.
 CustomTransitionPage<void> _snappyPage({
   required LocalKey key,
@@ -63,12 +82,15 @@ GoRouter createAppRouter() {
       ),
       GoRoute(
         path: '/login',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final email = state.uri.queryParameters['email'];
           final registered = state.uri.queryParameters['registered'] == '1';
-          return LoginScreen(
-            initialEmail: email,
-            showRegisterSuccess: registered,
+          return _fadePage(
+            key: state.pageKey,
+            child: LoginScreen(
+              initialEmail: email,
+              showRegisterSuccess: registered,
+            ),
           );
         },
       ),
@@ -98,7 +120,10 @@ GoRouter createAppRouter() {
             routes: [
               GoRoute(
                 path: '/dashboard',
-                builder: (context, state) => const GamesHubScreen(),
+                pageBuilder: (context, state) => _fadePage(
+                  key: state.pageKey,
+                  child: const GamesHubScreen(),
+                ),
                 routes: [
                   GoRoute(
                     path: 'quiz/local/:slug',

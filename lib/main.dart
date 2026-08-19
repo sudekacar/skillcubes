@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +19,9 @@ import 'core/theme/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -113,7 +118,14 @@ class _SkillCubesAppState extends State<SkillCubesApp> {
                   isDark ? Brightness.light : Brightness.dark,
             ),
           );
-          return MaterialApp.router(
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: MediaQuery.textScalerOf(context).clamp(
+                minScaleFactor: 1,
+                maxScaleFactor: 1.15,
+              ),
+            ),
+            child: MaterialApp.router(
             title: 'SkillCubes',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light(),
@@ -130,6 +142,7 @@ class _SkillCubesAppState extends State<SkillCubesApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             routerConfig: _router,
+            ),
           );
         },
       ),

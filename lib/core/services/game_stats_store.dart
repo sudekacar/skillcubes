@@ -107,6 +107,7 @@ class GameStatsStore extends ChangeNotifier {
   static const _profileKey = 'user_profile';
   static const _scoresKey = 'leaderboard_scores';
   static const _quizProgressKey = 'quiz_category_progress';
+  static const _guestModeKey = 'guest_mode';
 
   UserProfile _profile = const UserProfile(displayName: 'Player');
   List<LeaderboardEntry> _entries = [];
@@ -116,6 +117,9 @@ class GameStatsStore extends ChangeNotifier {
   UserProfile get profile => _profile;
   List<LeaderboardEntry> get entries => List.unmodifiable(_entries);
   Map<String, int> get quizProgress => Map.unmodifiable(_quizProgress);
+
+  /// True when the user chose “continue as guest” on a prior launch.
+  bool get isGuestMode => _prefs.getBool(_guestModeKey) ?? false;
 
   /// How many sessions were logged today (overall category preferred).
   int sessionsToday() {
@@ -161,6 +165,16 @@ class GameStatsStore extends ChangeNotifier {
       displayName: name.trim().isEmpty ? 'Player' : name.trim(),
     );
     await _persistProfile();
+  }
+
+  Future<void> enableGuestMode() async {
+    await _prefs.setBool(_guestModeKey, true);
+    notifyListeners();
+  }
+
+  Future<void> clearGuestMode() async {
+    await _prefs.setBool(_guestModeKey, false);
+    notifyListeners();
   }
 
   /// Persists best correct count for a category (keeps the higher score).
