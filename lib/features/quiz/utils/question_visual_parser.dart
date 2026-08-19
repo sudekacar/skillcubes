@@ -106,4 +106,16 @@ abstract final class QuestionVisualParser {
     if (m == null) return null;
     return FractionParts(int.parse(m.group(1)!), int.parse(m.group(2)!));
   }
+
+  /// Known puzzle glyphs rendered by [ShapeGlyphs].
+  static const shapeGlyphChars = '▲△■∎█▢●○◆◇♦★☆✚+┼';
+
+  /// True when [label] is a sequence of shape glyphs (e.g. funnel options).
+  static bool isShapeSequence(String label) {
+    final trimmed = label.trim();
+    if (trimmed.runes.length < 2) return false;
+    final parts = parseShapeSequence(trimmed);
+    if (parts.length < 2) return false;
+    return parts.every((g) => shapeGlyphChars.contains(g));
+  }
 }

@@ -3,6 +3,7 @@ class AppAssets {
   AppAssets._();
 
   static const String logo = 'assets/images/skillcubes_logo.png';
+  static const String logoSvg = 'assets/images/skillcubes_logo.svg';
 }
 
 class AppConstants {

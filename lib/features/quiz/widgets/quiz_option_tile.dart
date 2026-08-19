@@ -113,7 +113,7 @@ class _OptionBody extends StatelessWidget {
     final slug = categorySlug.toLowerCase();
     final fraction = QuestionVisualParser.parseFraction(label);
     if (fraction != null &&
-        (slug.contains('ratio') || slug.contains('oran') || label.contains('/'))) {
+        (slug.contains('ratio') || slug.contains('oran'))) {
       final accents = [ShapeGlyphs.indigo, ShapeGlyphs.emerald, ShapeGlyphs.amber, ShapeGlyphs.sky];
       // Use hash of fraction for stable accent
       final accent = accents[(fraction.num + fraction.den) % accents.length];
@@ -124,29 +124,22 @@ class _OptionBody extends StatelessWidget {
       );
     }
 
-    final looksLikeShapes = label.runes.length >= 2 &&
-        label.runes.every((r) {
-          final s = String.fromCharCode(r);
-          return '▲△■∎█▢●○◆◇♦★☆✚+┼'.contains(s) || s.trim().isEmpty;
-        });
-
-    if (looksLikeShapes ||
-        slug.contains('funnel') ||
-        (label.isNotEmpty && !RegExp(r'^[A-Za-z0-9 /]+$').hasMatch(label))) {
+    if (QuestionVisualParser.isShapeSequence(label)) {
       final shapes = QuestionVisualParser.parseShapeSequence(label);
-      if (shapes.length >= 2) {
-        return ShapeGlyphs.sequence(shapes, size: 24, gap: 5);
-      }
+      return ShapeGlyphs.sequence(shapes, size: 24, gap: 5);
     }
 
+    final text = label.trim().isEmpty ? '—' : label.trim();
+
     return Text(
-      label,
+      text,
       style: TextStyle(
         fontWeight: FontWeight.w600,
         fontSize: 15,
         height: 1.3,
         color: Theme.of(context).colorScheme.onSurface,
       ),
+      softWrap: true,
     );
   }
 }

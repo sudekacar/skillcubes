@@ -8,7 +8,7 @@ import '../../../core/localization/l10n_ext.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/services/game_stats_store.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/skillcubes_logo_mark.dart';
+import '../../../core/widgets/skillcubes_svg_logo.dart';
 
 /// Boot splash: logo + brand fade/scale, session check, then route forward.
 class SplashScreen extends StatefulWidget {
@@ -167,7 +167,7 @@ class _SplashScreenState extends State<SplashScreen>
                         opacity: _logoOpacity,
                         child: ScaleTransition(
                           scale: _logoScale,
-                          child: const SkillCubesLogoMark(size: 128),
+                          child: const SkillCubesSvgLogo(size: 140),
                         ),
                       ),
                       const SizedBox(height: 28),

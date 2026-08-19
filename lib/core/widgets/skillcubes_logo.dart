@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constants/app_constants.dart';
 import '../theme/app_colors.dart';
@@ -24,12 +25,18 @@ class SkillCubesLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Image.asset(
-      AppAssets.logo,
+    final image = SvgPicture.asset(
+      AppAssets.logoSvg,
       width: showSoftPlate ? size * 0.88 : size,
       height: showSoftPlate ? size * 0.88 : size,
       fit: fit,
-      filterQuality: FilterQuality.high,
+      placeholderBuilder: (_) => Image.asset(
+        AppAssets.logo,
+        width: showSoftPlate ? size * 0.88 : size,
+        height: showSoftPlate ? size * 0.88 : size,
+        fit: fit,
+        filterQuality: FilterQuality.high,
+      ),
     );
 
     if (!showSoftPlate) {

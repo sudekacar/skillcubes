@@ -10,9 +10,9 @@ import '../../../core/services/game_stats_store.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/haptics.dart';
-import '../../../core/widgets/skillcubes_logo_mark.dart';
+import '../../../core/widgets/skillcubes_svg_logo.dart';
 
-/// Clean, centered login — sharp typography & vector branding.
+/// Corporate login — top brand lockup, centered SVG logo, compact form.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
@@ -87,17 +87,17 @@ class _LoginScreenState extends State<LoginScreen> {
       suffixIcon: suffix,
       filled: true,
       fillColor: scheme.surface,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: borderColor.withValues(alpha: 0.55)),
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: borderColor.withValues(alpha: 0.5)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: scheme.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: scheme.error),
       ),
     );
@@ -169,184 +169,174 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 420,
-                    minHeight: constraints.maxHeight - 48,
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 8),
-                        Center(child: SkillCubesLogoMark(size: 96)),
-                        const SizedBox(height: 20),
-                        Text(
-                          context.tr('app_name'),
-                          textAlign: TextAlign.center,
-                          style: textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 28,
-                            letterSpacing: -0.5,
-                            height: 1.1,
-                          ),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight - 32),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SkillCubesBrandLockup(
+                          logoSize: 36,
+                          subtitle: context.tr('tagline'),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          context.tr('welcome_back'),
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: SkillCubesSvgLogo(
+                          size: constraints.maxWidth > 520 ? 148 : 128,
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          context.tr('auth_subtitle'),
-                          textAlign: TextAlign.center,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.muted(context),
-                            fontSize: 15,
-                            height: 1.45,
-                            fontWeight: FontWeight.w400,
-                          ),
+                      ),
+                      const SizedBox(height: 18),
+                      Text(
+                        context.tr('welcome_back'),
+                        textAlign: TextAlign.center,
+                        style: textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                          height: 1.2,
                         ),
-                        const SizedBox(height: 32),
-                        TextField(
-                          controller: _emailController,
-                          focusNode: _emailFocus,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          autocorrect: false,
-                          enableSuggestions: false,
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: _fieldDecoration(
-                            hint: context.tr('email_hint'),
-                            prefixIcon: Icons.mail_outline_rounded,
-                            focused: _emailFocus.hasFocus,
-                          ),
-                          onSubmitted: (_) => _passwordFocus.requestFocus(),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        context.tr('auth_subtitle'),
+                        textAlign: TextAlign.center,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: AppColors.muted(context),
+                          fontSize: 14,
+                          height: 1.4,
                         ),
-                        const SizedBox(height: 14),
-                        TextField(
-                          controller: _passwordController,
-                          focusNode: _passwordFocus,
-                          obscureText: _obscure,
-                          textInputAction: TextInputAction.done,
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: _fieldDecoration(
-                            hint: context.tr('password_hint'),
-                            prefixIcon: Icons.lock_outline_rounded,
-                            focused: _passwordFocus.hasFocus,
-                            suffix: IconButton(
-                              tooltip: _obscure ? 'Show' : 'Hide',
-                              onPressed: () =>
-                                  setState(() => _obscure = !_obscure),
-                              icon: Icon(
-                                _obscure
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                size: 22,
-                                color: _passwordFocus.hasFocus
-                                    ? scheme.primary
-                                    : AppColors.muted(context),
-                              ),
+                      ),
+                      const SizedBox(height: 22),
+                      TextField(
+                        controller: _emailController,
+                        focusNode: _emailFocus,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        autocorrect: false,
+                        enableSuggestions: false,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        decoration: _fieldDecoration(
+                          hint: context.tr('email_hint'),
+                          prefixIcon: Icons.mail_outline_rounded,
+                          focused: _emailFocus.hasFocus,
+                        ),
+                        onSubmitted: (_) => _passwordFocus.requestFocus(),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _passwordController,
+                        focusNode: _passwordFocus,
+                        obscureText: _obscure,
+                        textInputAction: TextInputAction.done,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        decoration: _fieldDecoration(
+                          hint: context.tr('password_hint'),
+                          prefixIcon: Icons.lock_outline_rounded,
+                          focused: _passwordFocus.hasFocus,
+                          suffix: IconButton(
+                            tooltip: _obscure ? 'Show' : 'Hide',
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              size: 22,
+                              color: _passwordFocus.hasFocus
+                                  ? scheme.primary
+                                  : AppColors.muted(context),
                             ),
                           ),
-                          onSubmitted: (_) => _busy ? null : _login(),
                         ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          height: 54,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _busy ? null : _login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: scheme.primary,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shadowColor: scheme.primary.withValues(alpha: 0.35),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                        onSubmitted: (_) => _busy ? null : _login(),
+                      ),
+                      const SizedBox(height: 18),
+                      SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _busy ? null : _login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: scheme.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.15,
+                            ),
+                          ),
+                          child: _busy
+                              ? const SizedBox(
+                                  height: 22,
+                                  width: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(context.tr('login')),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: _busy ? null : _guest,
+                        style: TextButton.styleFrom(
+                          foregroundColor: scheme.primary,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: Text(context.tr('continue_guest')),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            context.tr('no_account'),
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: AppColors.muted(context),
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _busy
+                                ? null
+                                : () {
+                                    AppHaptics.selection();
+                                    context.push('/signup');
+                                  },
+                            style: TextButton.styleFrom(
+                              foregroundColor: scheme.primary,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
                               ),
                               textStyle: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.2,
-                              ),
-                            ),
-                            child: _busy
-                                ? const SizedBox(
-                                    height: 22,
-                                    width: 22,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(context.tr('login')),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: _busy ? null : _guest,
-                          style: TextButton.styleFrom(
-                            foregroundColor: scheme.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            textStyle: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          child: Text(context.tr('continue_guest')),
-                        ),
-                        const SizedBox(height: 4),
-                        Column(
-                          children: [
-                            Text(
-                              context.tr('no_account'),
-                              textAlign: TextAlign.center,
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: AppColors.muted(context),
                                 fontSize: 14,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            TextButton(
-                              onPressed: _busy
-                                  ? null
-                                  : () {
-                                      AppHaptics.selection();
-                                      context.push('/signup');
-                                    },
-                              style: TextButton.styleFrom(
-                                foregroundColor: scheme.primary,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                textStyle: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              child: Text(context.tr('signup')),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
+                            child: Text(context.tr('signup')),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

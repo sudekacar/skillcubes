@@ -35,8 +35,14 @@ class QuestionRepository {
 
     final questions = list.map((e) {
       final json = Map<String, dynamic>.from(e as Map);
-      final options = (json['options'] as List<dynamic>)
-          .map((o) => o.toString())
+      final options = (json['options'] as List<dynamic>? ?? const [])
+          .map((o) {
+            if (o == null) return '';
+            if (o is String) return o.trim();
+            if (o is num) return o.toString();
+            return o.toString().trim();
+          })
+          .where((s) => s.isNotEmpty)
           .toList();
       return QuizQuestion(
         id: '${json['id']}',
