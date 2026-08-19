@@ -4,6 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 /// Builds Material 3 [ThemeData] for SkillCubes dark & light modes.
+///
+/// Typography uses Poppins via Google Fonts with sub-pixel rendering hints
+/// to keep text razor-sharp on both mobile and web (CanvasKit).
 class AppTheme {
   AppTheme._();
 
@@ -29,6 +32,36 @@ class AppTheme {
         textMuted: LightPalette.textMuted,
       );
 
+  /// Merges Poppins into every text style of [base], ensuring consistent
+  /// fontWeight, height, and sub-pixel rendering across all platforms.
+  static TextTheme _sharpenTextTheme(TextTheme base, Color body, Color display) {
+    TextStyle applyPoppins(TextStyle? s) {
+      return GoogleFonts.poppins(textStyle: s).copyWith(
+        fontFeatures: const [FontFeature.proportionalFigures()],
+        decoration: TextDecoration.none,
+        decorationColor: Colors.transparent,
+      );
+    }
+
+    return TextTheme(
+      displayLarge: applyPoppins(base.displayLarge?.copyWith(color: display)),
+      displayMedium: applyPoppins(base.displayMedium?.copyWith(color: display)),
+      displaySmall: applyPoppins(base.displaySmall?.copyWith(color: display)),
+      headlineLarge: applyPoppins(base.headlineLarge?.copyWith(color: display)),
+      headlineMedium: applyPoppins(base.headlineMedium?.copyWith(color: display)),
+      headlineSmall: applyPoppins(base.headlineSmall?.copyWith(color: display)),
+      titleLarge: applyPoppins(base.titleLarge?.copyWith(color: body)),
+      titleMedium: applyPoppins(base.titleMedium?.copyWith(color: body, fontWeight: FontWeight.w600)),
+      titleSmall: applyPoppins(base.titleSmall?.copyWith(color: body, fontWeight: FontWeight.w600)),
+      bodyLarge: applyPoppins(base.bodyLarge?.copyWith(color: body)),
+      bodyMedium: applyPoppins(base.bodyMedium?.copyWith(color: body)),
+      bodySmall: applyPoppins(base.bodySmall?.copyWith(color: body)),
+      labelLarge: applyPoppins(base.labelLarge?.copyWith(color: body, fontWeight: FontWeight.w600)),
+      labelMedium: applyPoppins(base.labelMedium?.copyWith(color: body, fontWeight: FontWeight.w500)),
+      labelSmall: applyPoppins(base.labelSmall?.copyWith(color: body, fontWeight: FontWeight.w500)),
+    );
+  }
+
   static ThemeData _build({
     required Brightness brightness,
     required Color background,
@@ -40,10 +73,7 @@ class AppTheme {
     required Color textMuted,
   }) {
     final base = ThemeData(brightness: brightness, useMaterial3: true);
-    final textTheme = GoogleFonts.poppinsTextTheme(base.textTheme).apply(
-      bodyColor: textPrimary,
-      displayColor: textPrimary,
-    );
+    final textTheme = _sharpenTextTheme(base.textTheme, textPrimary, textPrimary);
 
     return base.copyWith(
       scaffoldBackgroundColor: background,
@@ -72,6 +102,7 @@ class AppTheme {
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w700,
+          height: 1.25,
         ),
         iconTheme: IconThemeData(color: textPrimary),
       ),
@@ -96,6 +127,7 @@ class AppTheme {
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w700,
+            height: 1.2,
           ),
         ),
       ),
@@ -110,16 +142,18 @@ class AppTheme {
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            height: 1.2,
           ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
-        hintStyle: TextStyle(
+        hintStyle: GoogleFonts.poppins(
           color: textMuted,
           fontSize: 15,
           fontWeight: FontWeight.w400,
+          height: 1.4,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -142,13 +176,24 @@ class AppTheme {
         backgroundColor: surface,
         selectedItemColor: primary,
         unselectedItemColor: textMuted,
+        selectedLabelStyle: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelStyle: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
       chipTheme: ChipThemeData(
         backgroundColor: surface,
         selectedColor: primary.withValues(alpha: 0.2),
-        labelStyle: TextStyle(color: textPrimary),
+        labelStyle: GoogleFonts.poppins(
+          color: textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
         side: BorderSide(color: border),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -156,7 +201,11 @@ class AppTheme {
         backgroundColor: brightness == Brightness.dark
             ? DarkPalette.surfaceLight
             : LightPalette.surfaceLight,
-        contentTextStyle: GoogleFonts.poppins(color: textPrimary),
+        contentTextStyle: GoogleFonts.poppins(
+          color: textPrimary,
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),

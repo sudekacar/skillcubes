@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,17 @@ import 'core/theme/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Pre-fetch Poppins font variants so text never renders with fallback font.
+  GoogleFonts.config.allowRuntimeFetching = !kIsWeb;
+  await GoogleFonts.pendingFonts([
+    GoogleFonts.poppins(fontWeight: FontWeight.w400),
+    GoogleFonts.poppins(fontWeight: FontWeight.w500),
+    GoogleFonts.poppins(fontWeight: FontWeight.w600),
+    GoogleFonts.poppins(fontWeight: FontWeight.w700),
+    GoogleFonts.poppins(fontWeight: FontWeight.w800),
+  ]);
+
   if (kIsWeb) {
     usePathUrlStrategy();
   }
@@ -120,10 +132,7 @@ class _SkillCubesAppState extends State<SkillCubesApp> {
           );
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(
-              textScaler: MediaQuery.textScalerOf(context).clamp(
-                minScaleFactor: 1,
-                maxScaleFactor: 1.15,
-              ),
+              textScaler: const TextScaler.linear(1.0),
             ),
             child: MaterialApp.router(
             title: 'SkillCubes',
