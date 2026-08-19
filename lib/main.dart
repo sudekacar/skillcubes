@@ -21,15 +21,7 @@ import 'core/theme/theme_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Pre-fetch Poppins font variants so text never renders with fallback font.
-  GoogleFonts.config.allowRuntimeFetching = !kIsWeb;
-  await GoogleFonts.pendingFonts([
-    GoogleFonts.poppins(fontWeight: FontWeight.w400),
-    GoogleFonts.poppins(fontWeight: FontWeight.w500),
-    GoogleFonts.poppins(fontWeight: FontWeight.w600),
-    GoogleFonts.poppins(fontWeight: FontWeight.w700),
-    GoogleFonts.poppins(fontWeight: FontWeight.w800),
-  ]);
+  GoogleFonts.config.allowRuntimeFetching = true;
 
   if (kIsWeb) {
     usePathUrlStrategy();
