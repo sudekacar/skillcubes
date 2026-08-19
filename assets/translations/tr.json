@@ -195,5 +195,6 @@
   "checkout_success_title": "Tebrikler! SkillCubes Premium Hesabınız Aktif Edildi 🚀",
   "checkout_success_body": "Tüm kategoriler, AI raporları ve radar artık senin.",
   "checkout_continue": "Dashboard'a dön",
-  "network_error_message": "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
+  "network_error_message": "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.",
+  "emma_connection_error": "Şu an sunucuya ulaşamıyorum 😔 İnternet bağlantını kontrol edip tekrar deneyebilir misin?"
 }

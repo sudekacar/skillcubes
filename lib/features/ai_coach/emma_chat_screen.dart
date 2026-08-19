@@ -57,6 +57,7 @@ class _EmmaChatScreenState extends State<EmmaChatScreen> {
     final api = context.read<ApiService>();
     final loginHint = context.trRead('emma_login_hint');
     final errorHint = context.trRead('emma_error');
+    final connectionErrorHint = context.trRead('emma_connection_error');
 
     await AppHaptics.light();
     if (!mounted) return;
@@ -90,7 +91,13 @@ class _EmmaChatScreenState extends State<EmmaChatScreen> {
           reply = EmmaPersona.greetingTr;
         }
       } on ApiException catch (e) {
-        reply = e.message;
+        final isNetwork = e.statusCode == 0 ||
+            e.message.contains('Connection') ||
+            e.message.contains('Timeout') ||
+            e.message.contains('fetch');
+        reply = isNetwork
+            ? connectionErrorHint
+            : '${EmmaPersona.name}: ${e.message}';
       } catch (_) {
         reply = errorHint;
       }

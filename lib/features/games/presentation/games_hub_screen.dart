@@ -275,7 +275,7 @@ class _CategoryGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.88,
+        childAspectRatio: 0.72,
       ),
       itemBuilder: (context, index) {
         if (useRemote) {
@@ -396,15 +396,15 @@ class _CategoryCard extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Container(
-                      width: 44,
-                      height: 44,
+                      width: 36,
+                      height: 36,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -412,46 +412,62 @@ class _CategoryCard extends StatelessWidget {
                             color.withValues(alpha: 0.12),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(11),
                       ),
-                      child: Icon(icon, color: color, size: 24),
+                      child: Icon(icon, color: color, size: 20),
                     ),
                     const Spacer(),
                     if (isLocked)
-                      const Icon(Icons.lock, size: 16, color: AppColors.amber),
+                      const Icon(Icons.lock, size: 15, color: AppColors.amber),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14,
+                const SizedBox(height: 6),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        flex: 3,
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13,
+                            height: 1.15,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Flexible(
+                        flex: 2,
+                        child: Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: AppColors.muted(context),
+                            fontSize: 11,
+                            height: 1.15,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: AppColors.muted(context),
-                    fontSize: 11,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Spacer(),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: LinearProgressIndicator(
                     value: ratio,
-                    minHeight: 6,
+                    minHeight: 5,
                     backgroundColor: AppColors.borderOf(context),
                     color: color,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 3),
                 Text(
                   isLocked
                       ? context.tr('teaser_badge', {'count': '$questionLimit'})
@@ -461,9 +477,11 @@ class _CategoryCard extends StatelessWidget {
                         }),
                   style: TextStyle(
                     color: AppColors.muted(context),
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

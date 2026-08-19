@@ -195,5 +195,6 @@
   "checkout_success_title": "Congrats! Your SkillCubes Premium account is active 🚀",
   "checkout_success_body": "All categories, AI reports, and radar are unlocked.",
   "checkout_continue": "Back to Dashboard",
-  "network_error_message": "Could not connect to server. Please check your internet connection."
+  "network_error_message": "Could not connect to server. Please check your internet connection.",
+  "emma_connection_error": "I can't reach the server right now 😔 Check your connection and try again!"
 }

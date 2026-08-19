@@ -29,12 +29,12 @@ class ApiService {
   /// iOS simulator / desktop / web use loopback.
   static String get hostOrigin {
     const port = 8000;
-    if (kIsWeb) return 'http://127.0.0.1:$port';
+    if (kIsWeb) return 'http://localhost:$port';
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return 'http://10.0.2.2:$port';
       default:
-        return 'http://127.0.0.1:$port';
+        return 'http://localhost:$port';
     }
   }
 
@@ -76,16 +76,23 @@ class ApiService {
     return Uri.parse('$baseUrl$normalized').replace(queryParameters: query);
   }
 
+  static const _defaultTimeout = Duration(seconds: 15);
+  static const _longTimeout = Duration(seconds: 45);
+
   Future<Map<String, dynamic>> postJson(
     String path,
     Map<String, dynamic> body, {
     bool auth = false,
+    Duration? timeout,
   }) async {
-    final response = await _safeRequest(() => _client.post(
-          _uri(path),
-          headers: _headers(auth: auth),
-          body: jsonEncode(body),
-        ));
+    final response = await _safeRequest(
+      () => _client.post(
+        _uri(path),
+        headers: _headers(auth: auth),
+        body: jsonEncode(body),
+      ),
+      timeout: timeout ?? (path.startsWith('/ai') ? _longTimeout : _defaultTimeout),
+    );
     return _decodeMap(response);
   }
 
@@ -93,11 +100,15 @@ class ApiService {
     String path, {
     Map<String, String>? query,
     bool auth = true,
+    Duration? timeout,
   }) async {
-    final response = await _safeRequest(() => _client.get(
-          _uri(path, query),
-          headers: _headers(auth: auth),
-        ));
+    final response = await _safeRequest(
+      () => _client.get(
+        _uri(path, query),
+        headers: _headers(auth: auth),
+      ),
+      timeout: timeout ?? _defaultTimeout,
+    );
     return _decodeMap(response);
   }
 
@@ -105,28 +116,32 @@ class ApiService {
     String path, {
     Map<String, String>? query,
     bool auth = true,
+    Duration? timeout,
   }) async {
-    final response = await _safeRequest(() => _client.get(
-          _uri(path, query),
-          headers: _headers(auth: auth),
-        ));
+    final response = await _safeRequest(
+      () => _client.get(
+        _uri(path, query),
+        headers: _headers(auth: auth),
+      ),
+      timeout: timeout ?? _defaultTimeout,
+    );
     return _decodeList(response);
   }
 
   /// Wraps HTTP calls to convert network failures into [ApiException].
   Future<http.Response> _safeRequest(
-    Future<http.Response> Function() request,
-  ) async {
+    Future<http.Response> Function() request, {
+    Duration timeout = _defaultTimeout,
+  }) async {
     try {
-      return await request().timeout(const Duration(seconds: 15));
+      return await request().timeout(timeout);
+    } on TimeoutException catch (_) {
+      throw ApiException(0, 'Request timed out');
     } on http.ClientException catch (e) {
       throw ApiException(0, 'Connection error: ${e.message}');
     } on FormatException catch (_) {
       throw ApiException(0, 'Invalid server response');
     } on Exception catch (e) {
-      if (e.toString().contains('TimeoutException')) {
-        throw ApiException(0, 'Request timed out');
-      }
       throw ApiException(0, 'Network error: $e');
     }
   }
