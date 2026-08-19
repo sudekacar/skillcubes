@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../../core/localization/l10n_ext.dart';
@@ -134,17 +135,33 @@ class _LoginScreenState extends State<LoginScreen> {
       context.go('/dashboard');
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
+      _showError(e.message);
+    } on http.ClientException catch (_) {
+      if (!mounted) return;
+      _showError(_networkErrorMessage);
+    } on FormatException catch (_) {
+      if (!mounted) return;
+      _showError(_networkErrorMessage);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      _showError(e.toString());
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  String get _networkErrorMessage =>
+      context.trRead('network_error_message');
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   Future<void> _guest() async {
@@ -304,8 +321,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: Text(context.tr('continue_guest')),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             context.tr('no_account'),

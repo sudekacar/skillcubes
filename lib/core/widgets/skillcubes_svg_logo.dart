@@ -61,31 +61,37 @@ class SkillCubesBrandLockup extends StatelessWidget {
       children: [
         SkillCubesSvgLogo(size: logoSize),
         const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'SkillCubes',
-              style: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.3,
-                height: 1.05,
-              ),
-            ),
-            if (subtitle != null && subtitle!.isNotEmpty)
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(
-                subtitle!,
-                style: textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(
-                        alpha: 0.55,
-                      ),
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.1,
-                  height: 1.2,
+                'SkillCubes',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                  height: 1.05,
                 ),
               ),
-          ],
+              if (subtitle != null && subtitle!.isNotEmpty)
+                Text(
+                  subtitle!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(
+                          alpha: 0.55,
+                        ),
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.1,
+                    height: 1.2,
+                  ),
+                ),
+            ],
+          ),
         ),
       ],
     );

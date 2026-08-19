@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -80,11 +81,11 @@ class ApiService {
     Map<String, dynamic> body, {
     bool auth = false,
   }) async {
-    final response = await _client.post(
-      _uri(path),
-      headers: _headers(auth: auth),
-      body: jsonEncode(body),
-    );
+    final response = await _safeRequest(() => _client.post(
+          _uri(path),
+          headers: _headers(auth: auth),
+          body: jsonEncode(body),
+        ));
     return _decodeMap(response);
   }
 
@@ -93,10 +94,10 @@ class ApiService {
     Map<String, String>? query,
     bool auth = true,
   }) async {
-    final response = await _client.get(
-      _uri(path, query),
-      headers: _headers(auth: auth),
-    );
+    final response = await _safeRequest(() => _client.get(
+          _uri(path, query),
+          headers: _headers(auth: auth),
+        ));
     return _decodeMap(response);
   }
 
@@ -105,11 +106,29 @@ class ApiService {
     Map<String, String>? query,
     bool auth = true,
   }) async {
-    final response = await _client.get(
-      _uri(path, query),
-      headers: _headers(auth: auth),
-    );
+    final response = await _safeRequest(() => _client.get(
+          _uri(path, query),
+          headers: _headers(auth: auth),
+        ));
     return _decodeList(response);
+  }
+
+  /// Wraps HTTP calls to convert network failures into [ApiException].
+  Future<http.Response> _safeRequest(
+    Future<http.Response> Function() request,
+  ) async {
+    try {
+      return await request().timeout(const Duration(seconds: 15));
+    } on http.ClientException catch (e) {
+      throw ApiException(0, 'Connection error: ${e.message}');
+    } on FormatException catch (_) {
+      throw ApiException(0, 'Invalid server response');
+    } on Exception catch (e) {
+      if (e.toString().contains('TimeoutException')) {
+        throw ApiException(0, 'Request timed out');
+      }
+      throw ApiException(0, 'Network error: $e');
+    }
   }
 
   Map<String, dynamic> _decodeMap(http.Response response) {

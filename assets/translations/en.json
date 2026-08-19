@@ -194,5 +194,6 @@
   "checkout_fill_fields": "Please fill in your card details",
   "checkout_success_title": "Congrats! Your SkillCubes Premium account is active 🚀",
   "checkout_success_body": "All categories, AI reports, and radar are unlocked.",
-  "checkout_continue": "Back to Dashboard"
+  "checkout_continue": "Back to Dashboard",
+  "network_error_message": "Could not connect to server. Please check your internet connection."
 }
